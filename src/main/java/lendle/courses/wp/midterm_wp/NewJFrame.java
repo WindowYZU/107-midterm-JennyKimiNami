@@ -31,6 +31,8 @@ public class NewJFrame extends javax.swing.JFrame {
      */
     public NewJFrame() {
         initComponents();
+        DefaultListModel model = new DefaultListModel();
+        jList1.setModel(model);
     }
 
     /**
@@ -101,7 +103,7 @@ public class NewJFrame extends javax.swing.JFrame {
         try {
             jButton1.setEnabled(false);
             //從 combobox 抓出被選到的項目，存到變數裡
-            String selectedItem="";
+            String selectedItem=""+jComboBox1.getSelectedItem();
             /////////////////////////////////////
             URL url = new URL(selectedItem);
             String fileName = url.getFile();
@@ -113,19 +115,23 @@ public class NewJFrame extends javax.swing.JFrame {
                     tempFile, new FileDownloaderCallback() {
                 @Override
                 public void totalBytesDownloaded(long bytes, boolean finished, boolean failed) {
-                    //implement this
+                    //implement this 
                     if (finished) {
                         progress.setVisible(false);
                         jButton1.setEnabled(true);
                         //將下載好的項目加入到 jList 裡面
-                        
+                        DefaultListModel model = (DefaultListModel)jList1.getModel();
+                        model.addElement(jComboBox1.getSelectedItem());
+                        jList1.updateUI();
                         ////////////////////////////
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
                                 try {
                                     URL fileURL=tempFile.toURI().toURL();
-                                    //利用 fileURL 將 image icon 加到 jLabel2
+                                    //利用 fileURL 將 image icon 加到 jLabel2                                    
+                                    ImageIcon icon1 = new ImageIcon(fileURL);
+                                    jLabel2.setIcon(icon1);
                                     ////////////////////////////////////////
                                     jList1.updateUI();
                                 } catch (Exception ex) {
